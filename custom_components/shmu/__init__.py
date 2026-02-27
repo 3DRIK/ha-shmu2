@@ -3,6 +3,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import async_timeout
+import aiohttp
 import logging
 from datetime import timedelta
 from .const import DOMAIN
