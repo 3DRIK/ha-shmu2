@@ -5,28 +5,32 @@ import voluptuous as vol
 from .const import DOMAIN
 
 class SHMUConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle SHMU integration config flow."""
+    """Handle a config flow for SHMU."""
 
     VERSION = 1
     MINOR_VERSION = 1
 
     async def async_step_user(self, user_input=None):
-        """Handle user input for SHMU station configuration."""
+        """Handle the initial step."""
         errors = {}
         if user_input is not None:
-            # Validate user input
-            if not user_input.get("station_id"):
-                errors["station_id"] = "required"
-            else:
-                # Create config entry
-                return self.async_create_entry(title=f"SHMU Station {user_input['station_id']}", data=user_input)
+            return self.async_create_entry(
+                title=f"SHMU Station {user_input['station_id']}",
+                data={
+                    "station_id": user_input["station_id"],
+                    "scan_interval": user_input["scan_interval"],
+                    "verify_ssl": user_input["verify_ssl"],
+                },
+            )
 
-        # Show form to user
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema({
-                vol.Required("station_id", default="12345"): str,
-                vol.Optional("scan_interval", default=300): int
-            }),
-            errors=errors
+            data_schema=vol.Schema(
+                {
+                    vol.Required("station_id", default="11813"): str,
+                    vol.Optional("scan_interval", default=300): int,
+                    vol.Optional("verify_ssl", default=True): bool,
+                }
+            ),
+            errors=errors,
         )
