@@ -48,9 +48,6 @@ class SHMUDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Fetch data from SHMU API."""
         try:
-            async def _async_update_data(self):
-    """Fetch data from SHMU API."""
-    try:
         async with async_timeout.timeout(10):
             session = async_get_clientsession(self._hass)
             # Disable SSL verification (temporary workaround)
