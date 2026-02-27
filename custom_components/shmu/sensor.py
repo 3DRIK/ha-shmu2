@@ -1,4 +1,4 @@
-from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
+from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import PERCENTAGE
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import DOMAIN
@@ -11,9 +11,10 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         coordinator,
         sensor_key: str,
         name: str,
-        unit: str,  # Use string units (e.g., "°C", "%", "hPa")
+        unit: str,
         device_class: SensorDeviceClass = None,
         icon: str = None,
+        state_class: SensorStateClass = None,
     ):
         """Initialize the sensor."""
         super().__init__(coordinator)
@@ -22,6 +23,7 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         self._unit = unit
         self._device_class = device_class
         self._icon = icon
+        self._state_class = state_class
         self._attr_unique_id = f"{DOMAIN}_{coordinator.config_entry.entry_id}_{sensor_key}"
 
     @property
@@ -50,6 +52,11 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         return self._device_class
 
     @property
+    def state_class(self) -> SensorStateClass:
+        """Return the state class."""
+        return self._state_class
+
+    @property
     def icon(self) -> str:
         """Return the icon."""
         return self._icon
@@ -63,40 +70,45 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             coordinator=coordinator,
             sensor_key="t",
             name="SHMU Temperature",
-            unit="°C",  # String unit
+            unit="°C",
             device_class=SensorDeviceClass.TEMPERATURE,
+            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
             icon="mdi:thermometer",
         ),
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="vlh_rel",
             name="SHMU Humidity",
-            unit=PERCENTAGE,  # PERCENTAGE is still valid
+            unit=PERCENTAGE,
             device_class=SensorDeviceClass.HUMIDITY,
+            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
             icon="mdi:water-percent",
         ),
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="tlak",
             name="SHMU Pressure",
-            unit="hPa",  # String unit
+            unit="hPa",
             device_class=SensorDeviceClass.PRESSURE,
+            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
             icon="mdi:gauge",
         ),
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="vie_pr_rych",
             name="SHMU Wind Speed",
-            unit="m/s",  # String unit
+            unit="m/s",
             device_class=SensorDeviceClass.WIND_SPEED,
+            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
             icon="mdi:weather-windy",
         ),
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="vie_pr_smer",
             name="SHMU Wind Direction",
-            unit="°",  # String unit
+            unit="°",
             device_class=SensorDeviceClass.WIND_SPEED,
+            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
             icon="mdi:compass",
         ),
     ]
