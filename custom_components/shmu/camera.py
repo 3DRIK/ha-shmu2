@@ -17,6 +17,7 @@ class SHMUMeteogramCamera(CoordinatorEntity, Camera):
         super().__init__(coordinator)
         self._attr_name = "SHMU Meteogram"
         self._attr_unique_id = f"{DOMAIN}_meteogram_{coordinator.config_entry.entry_id}"
+        self._access_tokens = set()  # Required for camera authentication
 
         # Dynamic device name based on station_id
         station_id = coordinator.config_entry.data["station_id"]
@@ -27,6 +28,11 @@ class SHMUMeteogramCamera(CoordinatorEntity, Camera):
             model="AWS Weather Station",
             sw_version="1.0",
         )
+
+    @property
+    def access_tokens(self):
+        """Return the access tokens."""
+        return self._access_tokens
 
     def _generate_meteogram_url(self):
         """Generate the meteogram URL based on current time."""
@@ -45,7 +51,7 @@ class SHMUMeteogramCamera(CoordinatorEntity, Camera):
             time = "1200"
         return f"https://www.shmu.sk/data/datanwp/v2/meteogram/al-meteogram_32737-{date}-{time}-nwp-.png"
 
-    async def async_camera_image(self):
+    async def async_camera_image(self, width=None, height=None):
         """Return the meteogram image."""
         url = self._generate_meteogram_url()
         _LOGGER.debug("Fetching meteogram from URL: %s", url)
@@ -62,10 +68,9 @@ class SHMUMeteogramCamera(CoordinatorEntity, Camera):
             _LOGGER.error("Error fetching meteogram: %s", err)
             return None
 
-    async def async_added_to_hass(self):
-        """Call when the camera is added to Home Assistant."""
-        await super().async_added_to_hass()
-        _LOGGER.debug("%s camera added to Home Assistant", self._attr_name)
+    async def handle_async_mjpeg_stream(self, request):
+        """Generate an HTTP MJPEG stream from the camera."""
+        return None
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU meteogram camera."""
