@@ -1,0 +1,3 @@
+update_meteogram:
+  name: Update SHMU Meteogram
+  description: Manually refresh the SHMU meteogram image.
