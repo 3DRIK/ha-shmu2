@@ -1,11 +1,6 @@
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
 from homeassistant.const import PERCENTAGE
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.helpers.typing import (
-    UnitOfTemperature,
-    UnitOfPressure,
-    UnitOfSpeed,
-)
 from .const import DOMAIN
 
 class SHMUSensor(CoordinatorEntity, SensorEntity):
@@ -16,7 +11,7 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         coordinator,
         sensor_key: str,
         name: str,
-        unit: str,  # Changed from UnitType to str
+        unit: str,  # Use string units (e.g., "°C", "%", "hPa")
         device_class: SensorDeviceClass = None,
         icon: str = None,
     ):
@@ -45,8 +40,8 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         return self.coordinator.data.get(self._sensor_key)
 
     @property
-    def native_unit_of_measurement(self) -> str:  # Changed return type to str
-        """Return the unit of measurement."""
+    def native_unit_of_measurement(self) -> str:
+        """Return the unit of measurement as a string."""
         return self._unit
 
     @property
@@ -68,7 +63,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             coordinator=coordinator,
             sensor_key="t",
             name="SHMU Temperature",
-            unit=UnitOfTemperature.CELSIUS,  # Still valid
+            unit="°C",  # String unit
             device_class=SensorDeviceClass.TEMPERATURE,
             icon="mdi:thermometer",
         ),
@@ -76,7 +71,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             coordinator=coordinator,
             sensor_key="vlh_rel",
             name="SHMU Humidity",
-            unit=PERCENTAGE,  # Still valid
+            unit=PERCENTAGE,  # PERCENTAGE is still valid
             device_class=SensorDeviceClass.HUMIDITY,
             icon="mdi:water-percent",
         ),
@@ -84,7 +79,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             coordinator=coordinator,
             sensor_key="tlak",
             name="SHMU Pressure",
-            unit=UnitOfPressure.HPA,  # Still valid
+            unit="hPa",  # String unit
             device_class=SensorDeviceClass.PRESSURE,
             icon="mdi:gauge",
         ),
@@ -92,7 +87,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             coordinator=coordinator,
             sensor_key="vie_pr_rych",
             name="SHMU Wind Speed",
-            unit=UnitOfSpeed.METERS_PER_SECOND,  # Still valid
+            unit="m/s",  # String unit
             device_class=SensorDeviceClass.WIND_SPEED,
             icon="mdi:weather-windy",
         ),
@@ -100,7 +95,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             coordinator=coordinator,
             sensor_key="vie_pr_smer",
             name="SHMU Wind Direction",
-            unit="°",  # Changed from UnitType.DEGREE to string
+            unit="°",  # String unit
             device_class=SensorDeviceClass.WIND_SPEED,
             icon="mdi:compass",
         ),
