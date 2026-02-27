@@ -8,12 +8,13 @@ from .const import DOMAIN
 class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
     """Representation of a SHMU meteogram URL sensor."""
 
-    def __init__(self, coordinator):
+    def __init__(self, coordinator, meteogram_id=None):
         """Initialize the meteogram URL sensor."""
         super().__init__(coordinator)
         self._attr_name = "SHMU Meteogram URL"
         self._attr_unique_id = f"{DOMAIN}_meteogram_url_{coordinator.config_entry.entry_id}"
         self._attr_icon = "mdi:image"
+        self._meteogram_id = meteogram_id or "32737"  # Default meteogram ID
 
         # Dynamic device name based on station_id
         station_id = coordinator.config_entry.data["station_id"]
@@ -40,8 +41,7 @@ class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
         else:
             date = now.strftime("%Y%m%d")
             time = "1200"
-        station_id = self.coordinator.config_entry.data["station_id"]
-        return f"https://www.shmu.sk/data/datanwp/v2/meteogram/al-meteogram_{station_id}-{date}-{time}-nwp-.png"
+        return f"https://www.shmu.sk/data/datanwp/v2/meteogram/al-meteogram_{self._meteogram_id}-{date}-{time}-nwp-.png"
 
     @property
     def native_value(self):
@@ -56,6 +56,9 @@ class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU sensors."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
+
+    # You can pass the meteogram_id as a parameter if it's different from station_id
+    meteogram_id = "32737"  # Replace with the correct meteogram ID if needed
 
     sensors = [
         SHMUSensor(
@@ -103,7 +106,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:compass",
         ),
-        SHMUMeteogramSensor(coordinator),  # Add meteogram URL sensor
+        SHMUMeteogramSensor(coordinator, meteogram_id),  # Add meteogram URL sensor with meteogram_id
     ]
 
     async_add_entities(sensors)
