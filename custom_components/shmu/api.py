@@ -17,7 +17,7 @@ class SHMUAPI:
         """Generate the dynamic URL for SHMU data."""
         now = datetime.now()
         date_str = now.strftime("%Y%m%d")
-        time_str = f"{now.strftime('%H')}-{'%02d' % ((now.minute // 5) * 5)}-00"
+        time_str = f"{now.strftime('%H')}-{'%02d' % (((now.minute-1) // 5) * 5)}-00"
         return (
             f"https://opendata.shmu.sk/meteorology/climate/now/data/"
             f"{date_str}/aws1min%20-%20{now.strftime('%Y-%m-%d')} {time_str}.json"
