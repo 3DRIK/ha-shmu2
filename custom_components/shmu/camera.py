@@ -3,6 +3,11 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity import DeviceInfo
 from datetime import datetime, timedelta
 from .const import DOMAIN
+import aiohttp
+import async_timeout
+import logging
+
+_LOGGER = logging.getLogger(__name__)
 
 class SHMUMeteogramCamera(CoordinatorEntity, Camera):
     """Representation of a SHMU meteogram camera."""
@@ -43,20 +48,28 @@ class SHMUMeteogramCamera(CoordinatorEntity, Camera):
     async def async_camera_image(self):
         """Return the meteogram image."""
         url = self._generate_meteogram_url()
-        import aiohttp
-        import async_timeout
+        _LOGGER.debug("Fetching meteogram from URL: %s", url)
 
         try:
             async with async_timeout.timeout(10):
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url) as response:
                         if response.status != 200:
-                            raise Exception(f"Error fetching meteogram: HTTP {response.status}")
+                            _LOGGER.error("Error fetching meteogram: HTTP %s", response.status)
+                            return None
                         return await response.read()
         except Exception as err:
-            raise Exception(f"Error fetching meteogram: {err}")
+            _LOGGER.error("Error fetching meteogram: %s", err)
+            return None
+
+    async def async_added_to_hass(self):
+        """Call when the camera is added to Home Assistant."""
+        await super().async_added_to_hass()
+        _LOGGER.debug("%s camera added to Home Assistant", self._attr_name)
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU meteogram camera."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
-    async_add_entities([SHMUMeteogramCamera(coordinator)])
+    camera = SHMUMeteogramCamera(coordinator)
+    async_add_entities([camera])
+    _LOGGER.debug("SHMU Meteogram camera setup complete")
