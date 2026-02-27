@@ -4,6 +4,9 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity import DeviceInfo
 from datetime import datetime, timedelta
 from .const import DOMAIN
+from homeassistant.components.camera import CameraEntity
+from homeassistant.util.dt import now
+
 
 class SHMUSensor(CoordinatorEntity, SensorEntity):
     """Representation of a SHMU sensor."""
@@ -122,6 +125,57 @@ class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
         """Return the attributes for the meteogram URL."""
         return {"meteogram_url": self._generate_meteogram_url()}
 
+class SHMUMeteogramCamera(CoordinatorEntity, CameraEntity):
+    """Representation of a SHMU meteogram camera."""
+
+    def __init__(self, coordinator, meteogram_id=None):
+        """Initialize the meteogram camera."""
+        super().__init__(coordinator)
+        self._attr_name = "SHMU Meteogram"
+        self._attr_unique_id = f"{DOMAIN}_meteogram_camera_{coordinator.config_entry.entry_id}"
+        self._attr_icon = "mdi:camera"
+        self._meteogram_id = meteogram_id or "32737"  # Default meteogram ID
+
+        # Dynamic device name based on station_id
+        station_id = coordinator.config_entry.data["station_id"]
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
+            name=f"SHMU Station {station_id}",
+            manufacturer="Slovenský hydrometeorologický ústav",
+            model="AWS Weather Station",
+            sw_version="1.0",
+        )
+
+    def _generate_meteogram_url(self):
+        """Generate the meteogram URL based on current time."""
+        current_time = now()
+        if current_time.hour < 6:
+            date = (current_time - timedelta(days=1)).strftime("%Y%m%d")
+            time = "1600"
+        elif current_time.hour < 12:
+            date = current_time.strftime("%Y%m%d")
+            time = "0000"
+        elif current_time.hour < 17:
+            date = current_time.strftime("%Y%m%d")
+            time = "0600"
+        else:
+            date = current_time.strftime("%Y%m%d")
+            time = "1200"
+        return f"https://www.shmu.sk/data/datanwp/v2/meteogram/al-meteogram_{self._meteogram_id}-{date}-{time}-nwp-.png"
+
+    async def async_camera_image(self):
+        """Return the camera image."""
+        url = self._generate_meteogram_url()
+        return await self.hass.async_add_executor_job(self._fetch_image, url)
+
+    def _fetch_image(self, url):
+        """Fetch the image from the URL."""
+        import requests
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.content
+        return None
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU sensors."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
@@ -177,5 +231,6 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         ),
         SHMUMeteogramSensor(coordinator, meteogram_id),  # Add meteogram URL sensor with meteogram_id
     ]
+        async_add_entities([SHMUMeteogramCamera(coordinator, meteogram_id)]),
 
     async_add_entities(sensors)
