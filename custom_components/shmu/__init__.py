@@ -48,12 +48,19 @@ class SHMUDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Fetch data from SHMU API."""
         try:
-            async with async_timeout.timeout(10):
-                session = async_get_clientsession(self._hass)
-                url = f"https://opendata.shmu.sk/meteorology/climate/now/data/{self._station_id}.json"
-                response = await session.get(url)
+            async def _async_update_data(self):
+    """Fetch data from SHMU API."""
+    try:
+        async with async_timeout.timeout(10):
+            session = async_get_clientsession(self._hass)
+            # Disable SSL verification (temporary workaround)
+            connector = aiohttp.TCPConnector(ssl=False)
+            async with session.get(
+                f"https://opendata.shmu.sk/meteorology/climate/now/data/{self._station_id}.json",
+                connector=connector,
+            ) as response:
                 if response.status != 200:
                     raise UpdateFailed(f"Error fetching SHMU data: {response.status}")
                 return await response.json()
-        except Exception as err:
-            raise UpdateFailed(f"Error communicating with SHMU API: {err}")
+    except Exception as err:
+        raise UpdateFailed(f"Error communicating with SHMU API: {err}")
