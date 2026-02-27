@@ -12,6 +12,10 @@
       "scan_interval": {
         "name": "Interval aktualizácie (sekundy)",
         "description": "Interval v sekundách, ako často sa majú dáta aktualizovať."
+      },
+      "verify_ssl": {
+        "name": "Overovať SSL certifikáty",
+        "description": "Zapnite, ak chcete overovať SSL certifikáty (odporúčané)."
       }
     },
     "en": {
@@ -22,6 +26,10 @@
       "scan_interval": {
         "name": "Scan Interval (seconds)",
         "description": "Interval in seconds for how often data should be updated."
+      },
+      "verify_ssl": {
+        "name": "Verify SSL Certificates",
+        "description": "Enable to verify SSL certificates (recommended)."
       }
     }
   }
