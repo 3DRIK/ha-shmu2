@@ -1,6 +1,7 @@
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass, SensorStateClass
 from homeassistant.const import PERCENTAGE
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.device_registry import DeviceInfo
 from .const import DOMAIN
 
 class SHMUSensor(CoordinatorEntity, SensorEntity):
@@ -25,6 +26,15 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         self._icon = icon
         self._state_class = state_class
         self._attr_unique_id = f"{DOMAIN}_{coordinator.config_entry.entry_id}_{sensor_key}"
+
+        # Define device info
+    self._attr_device_info = DeviceInfo(
+      identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
+      name=f"SHMU Station {coordinator.config_entry.data['station_id']}",
+      manufacturer="Slovenský hydrometeorologický ústav",
+      model="AWS Weather Station",
+      sw_version="1.0",
+    )
 
     @property
     def unique_id(self) -> str:
@@ -72,7 +82,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             name="SHMU Temperature",
             unit="°C",
             device_class=SensorDeviceClass.TEMPERATURE,
-            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
+            state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:thermometer",
         ),
         SHMUSensor(
@@ -81,7 +91,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             name="SHMU Humidity",
             unit=PERCENTAGE,
             device_class=SensorDeviceClass.HUMIDITY,
-            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
+            state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:water-percent",
         ),
         SHMUSensor(
@@ -90,7 +100,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             name="SHMU Pressure",
             unit="hPa",
             device_class=SensorDeviceClass.PRESSURE,
-            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
+            state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:gauge",
         ),
         SHMUSensor(
@@ -99,7 +109,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             name="SHMU Wind Speed",
             unit="m/s",
             device_class=SensorDeviceClass.WIND_SPEED,
-            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
+            state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:weather-windy",
         ),
         SHMUSensor(
@@ -108,7 +118,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             name="SHMU Wind Direction",
             unit="°",
             device_class=SensorDeviceClass.WIND_SPEED,
-            state_class=SensorStateClass.MEASUREMENT,  # Add state_class
+            state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:compass",
         ),
     ]
