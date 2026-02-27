@@ -1,6 +1,6 @@
 from homeassistant.components.sensor import SensorEntity, SensorDeviceClass
 from homeassistant.const import (
-    TEMP_CELSIUS,
+    UnitOfTenperature.CELSIUS,
     PERCENTAGE,
     UnitOfPressure,
     UnitOfSpeed,
