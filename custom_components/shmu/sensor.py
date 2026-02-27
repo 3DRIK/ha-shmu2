@@ -27,14 +27,15 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
         self._state_class = state_class
         self._attr_unique_id = f"{DOMAIN}_{coordinator.config_entry.entry_id}_{sensor_key}"
 
-        # Define device info
-    self._attr_device_info = DeviceInfo(
-      identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
-      name=f"SHMU Station {coordinator.config_entry.data['station_id']}",
-      manufacturer="Slovenský hydrometeorologický ústav",
-      model="AWS Weather Station",
-      sw_version="1.0",
-    )
+        # Dynamic device name based on station_id
+        station_id = coordinator.config_entry.data["station_id"]
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
+            name=f"SHMU Station {station_id}",
+            manufacturer="Slovenský hydrometeorologický ústav",
+            model="AWS Weather Station",
+            sw_version="1.0",
+        )
 
     @property
     def unique_id(self) -> str:
@@ -79,7 +80,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="t",
-            name="SHMU Temperature",
+            name="Temperature",
             unit="°C",
             device_class=SensorDeviceClass.TEMPERATURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -88,7 +89,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="vlh_rel",
-            name="SHMU Humidity",
+            name="Humidity",
             unit=PERCENTAGE,
             device_class=SensorDeviceClass.HUMIDITY,
             state_class=SensorStateClass.MEASUREMENT,
@@ -97,7 +98,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="tlak",
-            name="SHMU Pressure",
+            name="Pressure",
             unit="hPa",
             device_class=SensorDeviceClass.PRESSURE,
             state_class=SensorStateClass.MEASUREMENT,
@@ -106,7 +107,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="vie_pr_rych",
-            name="SHMU Wind Speed",
+            name="Wind Speed",
             unit="m/s",
             device_class=SensorDeviceClass.WIND_SPEED,
             state_class=SensorStateClass.MEASUREMENT,
@@ -115,7 +116,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="vie_pr_smer",
-            name="SHMU Wind Direction",
+            name="Wind Direction",
             unit="°",
             device_class=SensorDeviceClass.WIND_SPEED,
             state_class=SensorStateClass.MEASUREMENT,
