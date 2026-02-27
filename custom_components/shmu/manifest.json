@@ -1,0 +1,14 @@
+{
+  "domain": "shmu",
+  "name": "Slovenský hydrometeorologický ústav (SHMU)",
+  "documentation": "https://github.com/yourusername/shmu-integration/blob/main/README.md",
+  "issue_tracker": "https://github.com/yourusername/shmu-integration/issues",
+  "codeowners": ["@yourusername"],
+  "version": "1.0.0",
+  "minimum_ha_version": "2026.1.0",
+  "config_flow": true,
+  "dependencies": ["http"],
+  "requirements": ["aiohttp==3.8.1", "async_timeout==4.0.2"],
+  "integration_type": "hub",
+  "iot_class": "cloud_polling"
+}
