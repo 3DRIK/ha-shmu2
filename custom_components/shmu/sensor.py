@@ -173,6 +173,42 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:compass",
+        ),
+        SHMUSensor(
+            coordinator=coordinator,
+            sensor_key="sln_trv",
+            name="Sun duration",
+            unit="min",
+            device_class=None,
+            state_class=SensorStateClass.MEASUREMENT,
+            icon="mdi:sun",
+        ),
+        SHMUSensor(
+            coordinator=coordinator,
+            sensor_key="zglo",
+            name="Global radiation",
+            unit="W/m²",
+            device_class=None,
+            state_class=SensorStateClass.MEASUREMENT,
+            icon="mdi:sun",
+        ),
+        SHMUSensor(
+            coordinator=coordinator,
+            sensor_key="zra_trv",
+            name="Precipitation duration",
+            unit="sec",
+            device_class=None,
+            state_class=SensorStateClass.MEASUREMENT,
+            icon="mdi:water",
+        ),
+        SHMUSensor(
+            coordinator=coordinator,
+            sensor_key="zra_uhrn",
+            name="Precipitation volume",
+            unit="mm",
+            device_class=None,
+            state_class=SensorStateClass.MEASUREMENT,
+            icon="mdi:water",
         )]
     # Only add the meteogram sensor if meteogram_id is not "none"
     if meteogram_id != "none":
