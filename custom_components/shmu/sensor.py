@@ -4,7 +4,6 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.entity import DeviceInfo
 from datetime import datetime, timedelta
 from .const import DOMAIN
-from homeassistant.components.camera import CameraEntity
 from homeassistant.util.dt import now
 
 
