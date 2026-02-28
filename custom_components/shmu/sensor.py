@@ -127,9 +127,7 @@ class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU sensors."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
-
-    meteogram_id = coordinator.config_entry.data["meteogram_id"]
-
+    meteogram_id = coordinator.config_entry.data.get("meteogram_id", "none")
     sensors = [
         SHMUSensor(
             coordinator=coordinator,
@@ -172,13 +170,12 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             sensor_key="vie_pr_smer",
             name="Wind Direction",
             unit="°",
-            device_class=SensorDeviceClass.WIND_SPEED,
+            device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:compass",
-        ),
-        if meteogram_id != "none":
-            SHMUMeteogramSensor(coordinator, meteogram_id),  # Add meteogram URL sensor with meteogram_id
-        
-    ]
+        )]
+    # Only add the meteogram sensor if meteogram_id is not "none"
+    if meteogram_id != "none":
+        sensors.append(SHMUMeteogramSensor(coordinator, meteogram_id))
 
     async_add_entities(sensors)
