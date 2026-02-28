@@ -33,11 +33,10 @@ The integration creates the following sensors:
 
 ## Meteogram
 
-The integration provides a camera entity for the meteogram image, which updates automatically based on the current time.
+The integration provides URL for camera entity for the meteogram image, which updates automatically based on the current time.
 
-## Services
-
-- `shmu.update_meteogram`: Manually refresh the meteogram image.
+Add to generic camera using
+`{{state_attr('sensor.shmu_meteogram_url', 'meteogram_url') }}`
 
 ## Troubleshooting
 
