@@ -18,6 +18,7 @@ class SHMUConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 title=f"SHMU Station {user_input['station_id']}",
                 data={
                     "station_id": user_input["station_id"],
+                    "meteogram_id": user_input["meteogram_id"],
                     "scan_interval": user_input["scan_interval"],
                     "verify_ssl": user_input["verify_ssl"],
                 },
@@ -28,6 +29,7 @@ class SHMUConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required("station_id", default="11813"): str,
+                    vol.Optional("meteogram_id", default="32737"): str,
                     vol.Optional("scan_interval", default=300): int,
                     vol.Optional("verify_ssl", default=True): bool,
                 }
