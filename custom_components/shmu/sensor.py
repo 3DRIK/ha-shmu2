@@ -176,9 +176,9 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:compass",
         ),
-        if(meteogram_id != "none"){
+        if(meteogram_id != "none"):
             SHMUMeteogramSensor(coordinator, meteogram_id),  # Add meteogram URL sensor with meteogram_id
-        }
+        
     ]
 
     async_add_entities(sensors)
