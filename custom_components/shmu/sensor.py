@@ -128,8 +128,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU sensors."""
     coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
 
-    # You can pass the meteogram_id as a parameter if it's different from station_id
-    meteogram_id = "32737"  # Replace with the correct meteogram ID if needed
+    meteogram_id = coordinator.config_entry.data["meteogram_id"]
 
     sensors = [
         SHMUSensor(
@@ -177,7 +176,9 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             state_class=SensorStateClass.MEASUREMENT,
             icon="mdi:compass",
         ),
-        SHMUMeteogramSensor(coordinator, meteogram_id),  # Add meteogram URL sensor with meteogram_id
+        if(meteogram_id != "none"){
+            SHMUMeteogramSensor(coordinator, meteogram_id),  # Add meteogram URL sensor with meteogram_id
+        }
     ]
 
     async_add_entities(sensors)
