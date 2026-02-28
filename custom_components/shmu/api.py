@@ -39,7 +39,7 @@ class SHMUAPI:
                 async with async_timeout.timeout(10):
                     async with api_session.get(url) as response:
                         if response.status != 200:
-                            raise Exception(f"Error fetching SHMU data: HTTP {response.status}")
+                            raise Exception(f"Error fetching SHMU data: HTTP {response.status} for URL: {url}")
                         data = await response.json()
                         station_data = [
                             item for item in data.get("data", [])
