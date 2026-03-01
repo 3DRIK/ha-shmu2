@@ -21,7 +21,7 @@ class SHMUAPI:
         time_str = f"{one_minute_ago.strftime('%H')}-{'%02d' % ((one_minute_ago.minute // 5) * 5)}-00"
         return (
             f"https://opendata.shmu.sk/meteorology/climate/now/data/"
-            f"{date_str}/aws1min%20-%20{now.strftime('%Y-%m-%d')} {time_str}.json"
+            f"{date_str}/aws1min%20-%20{one_minute_ago.strftime('%Y-%m-%d')} {time_str}.json"
         )
 
     async def fetch_data(self, session: aiohttp.ClientSession):
