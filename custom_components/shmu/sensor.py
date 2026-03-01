@@ -177,11 +177,11 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         SHMUSensor(
             coordinator=coordinator,
             sensor_key="sln_trv",
-            name="Sun duration",
+            name="Sun duration/hour",
             unit="min",
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            icon="mdi:sun-time",
+            icon="mdi:sun-clock",
         ),
         SHMUSensor(
             coordinator=coordinator,
