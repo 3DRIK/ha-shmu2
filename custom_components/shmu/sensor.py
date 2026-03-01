@@ -181,7 +181,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             unit="min",
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            icon="mdi:sun",
+            icon="mdi:sun-time",
         ),
         SHMUSensor(
             coordinator=coordinator,
@@ -190,7 +190,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             unit="W/m²",
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            icon="mdi:sun",
+            icon="mdi:sun-wireless",
         ),
         SHMUSensor(
             coordinator=coordinator,
@@ -199,7 +199,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             unit="sec",
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            icon="mdi:water",
+            icon="mdi:weather-rainy",
         ),
         SHMUSensor(
             coordinator=coordinator,
@@ -208,7 +208,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             unit="mm",
             device_class=None,
             state_class=SensorStateClass.MEASUREMENT,
-            icon="mdi:water",
+            icon="mdi:cup-water",
         )]
     # Only add the meteogram sensor if meteogram_id is not "none"
     if meteogram_id != "none":
