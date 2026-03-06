@@ -36,7 +36,7 @@ class SHMUSensor(CoordinatorEntity, SensorEntity):
             identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
             name=f"SHMU Station {station_id}",
             manufacturer="Slovenský hydrometeorologický ústav",
-            model="AWS Weather Station",
+            model="Weather Station",
             sw_version="1.0",
         )
 
@@ -93,7 +93,7 @@ class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
             identifiers={(DOMAIN, coordinator.config_entry.entry_id)},
             name=f"SHMU Station {station_id}",
             manufacturer="Slovenský hydrometeorologický ústav",
-            model="AWS Weather Station",
+            model="Weather Station",
             sw_version="1.0",
         )
 
