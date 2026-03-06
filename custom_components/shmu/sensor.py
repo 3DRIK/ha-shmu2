@@ -212,7 +212,7 @@ class SHMUMeteogramSensor(CoordinatorEntity, SensorEntity):
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the SHMU sensors."""
 
-    config_type = config_entry.data.get("config_type")
+    config_type = config_entry.domain.split("_")[-1] if "_" in config_entry.domain else "station"
 
     if config_type == "station":
         coordinator = hass.data[DOMAIN][config_entry.entry_id]["coordinator"]
